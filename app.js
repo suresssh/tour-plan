@@ -1,12 +1,18 @@
 const express = require('express');
-const fs = require('fs');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 const { tourRouter, userRouter } = require('./routes');
 
 dotenv.config({ path: './.env' });
 
 const app = express();
+
+const DB = process.env.DB_URI.replace('<db_password>', process.env.DB_PASSWORD);
+
+mongoose.connect(DB, {}).then((con) => {
+  console.log('Db successfully connected');
+});
 
 // logger
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
