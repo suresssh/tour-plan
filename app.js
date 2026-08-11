@@ -3,6 +3,8 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const { tourRouter, userRouter } = require('./routes');
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorController');
 
 dotenv.config({ path: './.env' });
 
@@ -28,6 +30,17 @@ app.use((req, res, next) => {
 
 // use multiple routes
 app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
+app.use('/api/v1/users', userRouter); 
+
+// handle unhandled routes
+app.all('*', (req, res, next) => { // * is used to match all the routes
+  // const err = new Error(`Can't find ${req.originalUrl} on this server!`);
+  // err.statusCode = 404;
+  // err.status = 'fail';
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404)); // pass the error to the global error handling middleware
+});
+
+//  global error handling middleware
+app.use(globalErrorHandler);
 
 module.exports = app;
