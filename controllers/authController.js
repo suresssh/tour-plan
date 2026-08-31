@@ -148,6 +148,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     },
   });
 
+  /** To be added later */
   // try {
   //   await sendEmail({
   //     email: user.email,
